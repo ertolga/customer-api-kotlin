@@ -29,12 +29,24 @@ class CustomerController(
             id = saved.id,
             fullName = saved.fullName,
             email = saved.email,
-            phone = saved.phone
+            phone = saved.phone,
+            nlIban = saved.nlIban,
+            trIban = saved.trIban
         )
     }
 
     @GetMapping
-    fun getAll(): List<Customer> = service.findAll()
+    fun getAll(): List<CustomerResponse> =
+        service.findAll().map { c ->
+            CustomerResponse(
+                id = c.id,
+                fullName = c.fullName,
+                email = c.email,
+                phone = c.phone,
+                nlIban = c.nlIban,
+                trIban = c.trIban
+            )
+        }
 
     @PutMapping("/{id}/iban")
     fun updateIban(
@@ -51,10 +63,32 @@ class CustomerController(
             id = saved.id,
             fullName = saved.fullName,
             email = saved.email,
-            phone = saved.phone
+            phone = saved.phone,
+            nlIban = saved.nlIban,
+            trIban = saved.trIban
         )
     }
 
+    @PutMapping("/{id}/tr-iban")
+    fun updateTrIban(
+        @PathVariable id: Long,
+        @RequestBody request: UpdateIbanRequest
+    ): CustomerResponse {
+        val customer = service.findById(id)
+            ?: throw RuntimeException("Customer not found")
+
+        customer.trIban = request.iban
+        val saved = service.save(customer)
+
+        return CustomerResponse(
+            id = saved.id,
+            fullName = saved.fullName,
+            email = saved.email,
+            phone = saved.phone,
+            nlIban = saved.nlIban,
+            trIban = saved.trIban
+        )
+    }
 
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): CustomerResponse {
@@ -69,7 +103,9 @@ class CustomerController(
             id = customer.id,
             fullName = customer.fullName,
             email = customer.email,
-            phone = customer.phone
+            phone = customer.phone,
+            nlIban = customer.nlIban,
+            trIban = customer.trIban
         )
     }
 }

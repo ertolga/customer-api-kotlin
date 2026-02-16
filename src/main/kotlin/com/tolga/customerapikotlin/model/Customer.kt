@@ -2,6 +2,8 @@ package com.tolga.customerapikotlin.model
 
 import jakarta.persistence.*
 
+
+
 @Entity
 @Table(name = "customer")
 open class Customer(
@@ -19,15 +21,16 @@ open class Customer(
     open var password: String,
 
     @Column(name = "nl_iban")
-    open var nlIban: String? = null
+    open var nlIban: String? = null,
+
+    @Column(name = "tr_iban")
+    open var trIban: String? = null   // ⭐ BURAYA EKLENECEK
 
 ) {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long? = null
 
-    // JPA için boş constructor
     protected constructor() : this(
         fullName = "",
         email = "",
